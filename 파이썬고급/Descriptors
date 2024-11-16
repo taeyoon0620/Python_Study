@@ -1,0 +1,163 @@
+**디스크립터 (Descriptors)**는 Python 객체 속성에 대한 접근(읽기, 쓰기, 삭제) 방식을 제어할 수 있는 메커니즘입니다. Python의 디스크립터 프로토콜을 구현하는 객체를 통해 속성의 동작을 커스터마이즈할 수 있습니다.
+
+디스크립터 프로토콜
+디스크립터는 클래스 수준에서 속성 접근의 동작을 제어하기 위해 다음 메서드 중 하나 이상을 구현하는 클래스입니다:
+
+__get__(self, instance, owner): 속성에 접근할 때 호출됩니다.
+__set__(self, instance, value): 속성에 값을 할당할 때 호출됩니다.
+__delete__(self, instance): 속성을 삭제할 때 호출됩니다.
+디스크립터는 다음과 같이 나뉩니다:
+
+데이터 디스크립터 (Data Descriptor): __get__과 __set__ 또는 __delete__를 구현.
+비데이터 디스크립터 (Non-Data Descriptor): __get__만 구현.
+디스크립터 구현 방법
+기본 디스크립터 예제
+
+class MyDescriptor:
+    def __init__(self, value=None):
+        self.value = value
+
+    def __get__(self, instance, owner):
+        print("Getting value...")
+        return self.value
+
+    def __set__(self, instance, value):
+        print(f"Setting value to {value}...")
+        self.value = value
+
+    def __delete__(self, instance):
+        print("Deleting value...")
+        del self.value
+
+class MyClass:
+    attribute = MyDescriptor()
+
+obj = MyClass()
+obj.attribute = 10  # Setting value to 10...
+print(obj.attribute)  # Getting value... 10
+del obj.attribute  # Deleting value...
+
+출력:
+Setting value to 10...
+Getting value...
+10
+Deleting value...
+
+동작 원리
+디스크립터 정의:
+MyDescriptor는 속성 접근을 제어하기 위해 __get__, __set__, __delete__ 메서드를 정의.
+디스크립터 연결:
+MyClass.attribute는 MyDescriptor의 인스턴스를 참조.
+속성 접근:
+obj.attribute에 접근하면 MyDescriptor의 __get__ 메서드가 호출됩니다.
+속성 설정:
+obj.attribute = 10은 __set__을 호출합니다.
+속성 삭제:
+del obj.attribute는 __delete__를 호출합니다.
+디스크립터의 활용 사례
+(1) 속성 값 유효성 검사
+디스크립터를 사용해 속성 값의 유효성을 확인할 수 있습니다.
+
+class PositiveNumber:
+    def __get__(self, instance, owner):
+        return instance.__dict__.get(self.name, 0)
+
+    def __set__(self, instance, value):
+        if value < 0:
+            raise ValueError("Value must be positive!")
+        instance.__dict__[self.name] = value
+
+    def __set_name__(self, owner, name):
+        self.name = name
+
+class Account:
+    balance = PositiveNumber()
+
+acc = Account()
+acc.balance = 100
+print(acc.balance)  # 100
+acc.balance = -50  # ValueError: Value must be positive!
+(2) 속성 접근 로깅
+속성 접근 시 로그를 기록할 수 있습니다.
+
+class LoggingDescriptor:
+    def __get__(self, instance, owner):
+        print(f"Accessing attribute for {instance}")
+        return instance.__dict__.get(self.name, None)
+
+    def __set__(self, instance, value):
+        print(f"Setting {self.name} to {value} for {instance}")
+        instance.__dict__[self.name] = value
+
+    def __set_name__(self, owner, name):
+        self.name = name
+
+class User:
+    name = LoggingDescriptor()
+
+u = User()
+u.name = "Alice"  # Setting name to Alice for <__main__.User object>
+print(u.name)     # Accessing attribute for <__main__.User object>
+(3) 읽기 전용 속성
+__set__를 구현하지 않아 속성을 읽기 전용으로 만들 수 있습니다.
+
+class ReadOnly:
+    def __init__(self, value):
+        self.value = value
+
+    def __get__(self, instance, owner):
+        return self.value
+
+class Config:
+    version = ReadOnly("1.0.0")
+
+config = Config()
+print(config.version)  # 1.0.0
+config.version = "2.0.0"  # AttributeError
+데이터 디스크립터 vs 비데이터 디스크립터
+데이터 디스크립터: __set__이나 __delete__를 구현한 디스크립터는 인스턴스 딕셔너리보다 우선합니다. (속성 값이 덮어씌워지지 않음)
+비데이터 디스크립터: __get__만 구현된 디스크립터는 인스턴스 딕셔너리에 저장된 값이 우선합니다.
+
+예제:
+class DataDescriptor:
+    def __get__(self, instance, owner):
+        return "Data Descriptor"
+
+    def __set__(self, instance, value):
+        pass
+
+class NonDataDescriptor:
+    def __get__(self, instance, owner):
+        return "Non-Data Descriptor"
+
+class MyClass:
+    data = DataDescriptor()
+    non_data = NonDataDescriptor()
+
+obj = MyClass()
+obj.data = "Instance Value"
+obj.non_data = "Instance Value"
+
+print(obj.data)      # Data Descriptor (우선)
+print(obj.non_data)  # Instance Value (딕셔너리 우선)
+
+출력:
+Data Descriptor
+Instance Value
+
+
+디스크립터의 장점
+속성 접근 제어: 속성 값의 유효성 검사나 동적 계산에 적합.
+재사용성: 동일한 디스크립터 클래스를 여러 속성에 재사용 가능.
+코드 간결화: 속성 제어 로직을 중앙 집중화.
+
+
+요약
+디스크립터는 속성의 동작을 제어하는 Python 객체입니다.
+__get__, __set__, __delete__ 메서드를 통해 속성 접근 방식을 정의합니다.
+속성 유효성 검사, 읽기 전용 속성, 로깅, 동적 계산 등에 활용됩니다.
+
+
+
+
+
