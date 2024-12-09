@@ -1,0 +1,115 @@
+가상 환경과 패키지 관리
+
+1. 가상 환경 (Virtual Environment)
+정의
+가상 환경은 프로젝트별로 독립된 Python 실행 환경을 제공합니다.
+서로 다른 프로젝트에서 Python 버전이나 패키지 의존성이 충돌하는 문제를 방지하기 위해 사용됩니다.
+왜 필요한가?
+패키지 의존성 문제 해결
+예: 프로젝트 A는 Django 3.2, 프로젝트 B는 Django 4.0을 사용하는 경우.
+전역 Python 환경 보호
+전역 Python 환경에 패키지를 설치하면 다른 프로젝트에도 영향을 미침.
+가상 환경은 전역 설치와 분리되어 안전하게 관리 가능.
+프로젝트 이식성
+가상 환경은 프로젝트별 패키지 리스트를 관리하므로 다른 환경에서도 동일하게 설정 가능.
+Python 가상 환경 도구
+venv (기본 제공)
+Python 3.3 이상에서 기본 제공되는 가상 환경 생성 도구.
+virtualenv
+venv보다 더 많은 기능을 제공하는 외부 도구.
+conda
+데이터 과학 및 머신러닝 환경에 특화된 패키지 및 가상 환경 관리 도구.
+가상 환경 생성 및 활성화
+1. 가상 환경 생성
+
+
+# venv를 사용하여 가상 환경 생성
+python -m venv myenv
+
+2. 가상 환경 활성화
+
+Windows:
+
+myenv\Scripts\activate
+
+macOS/Linux:
+source myenv/bin/activate
+
+3. 가상 환경 비활성화
+
+
+deactivate
+4. 가상 환경 삭제
+
+단순히 생성된 폴더를 삭제하면 됩니다.
+
+rm -rf myenv
+
+2. 패키지 관리
+Python에서는 **pip**을 사용하여 패키지를 설치, 제거, 업데이트, 확인 등을 할 수 있습니다.
+
+pip의 주요 명령어
+명령어	설명
+pip install <패키지명>	패키지 설치
+pip install <패키지명>==<버전>	특정 버전의 패키지 설치
+pip install -U <패키지명>	패키지 최신 버전으로 업데이트
+pip uninstall <패키지명>	패키지 제거
+pip list	설치된 패키지 목록 확인
+pip show <패키지명>	특정 패키지 정보 확인
+pip freeze	설치된 패키지를 버전과 함께 나열
+
+3. 요구사항 파일 (Requirements File)
+프로젝트의 패키지 의존성을 기록하여 다른 환경에서도 동일하게 설정할 수 있습니다.
+파일명: requirements.txt
+요구사항 파일 생성
+
+pip freeze > requirements.txt
+요구사항 파일로 패키지 설치
+
+pip install -r requirements.txt
+4. 예제: 가상 환경과 패키지 관리
+가상 환경 생성 및 활성화
+
+
+python -m venv myenv
+source myenv/bin/activate
+패키지 설치
+
+pip install numpy pandas
+requirements.txt 생성
+
+
+pip freeze > requirements.txt
+다른 환경에서 패키지 설치
+
+
+pip install -r requirements.txt
+가상 환경 비활성화
+
+
+deactivate
+5. 추가 도구
+1. pipenv
+pip와 virtualenv를 통합한 도구.
+Pipfile이라는 별도의 파일로 의존성을 관리.
+명령어 예:
+
+pipenv install
+pipenv install flask
+2. conda
+Python뿐 아니라 R, C++ 등 다양한 언어의 패키지 관리.
+명령어 예:
+
+conda create -n myenv python=3.9
+conda activate myenv
+conda install numpy
+
+6. 가상 환경과 패키지 관리의 Best Practices
+프로젝트 시작 시 반드시 가상 환경을 설정.
+패키지를 설치할 때 최소한의 필요 패키지만 설치.
+requirements.txt를 항상 최신 상태로 유지.
+전역 환경에 패키지를 설치하지 않음.
+정리
+가상 환경은 프로젝트별로 독립된 Python 환경을 제공하며 의존성 문제를 방지.
+pip는 Python의 기본 패키지 관리 도구로, 설치, 업데이트, 삭제, 의존성 관리 가능.
+요구사항 파일을 사용하면 패키지 의존성을 공유 및 이식성 있게 관리 가능.
