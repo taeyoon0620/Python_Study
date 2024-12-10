@@ -1,0 +1,173 @@
+요청과 웹 스크래핑 (Requests and Web Scraping)
+1. 요청 (HTTP Requests)
+웹에서 데이터를 가져오거나 서버와 상호작용하기 위해 HTTP 요청을 사용합니다.
+
+HTTP 요청의 주요 메서드
+메서드	설명
+GET	서버에서 데이터를 요청 (읽기 작업)
+POST	서버에 데이터를 전송 (쓰기 작업)
+PUT	서버의 데이터를 업데이트
+DELETE	서버의 데이터를 삭제
+Python에서 HTTP 요청
+Python에서는 주로 requests 라이브러리를 사용하여 HTTP 요청을 보냅니다.
+
+requests 기본 사용법
+
+import requests
+
+# GET 요청
+response = requests.get("https://jsonplaceholder.typicode.com/posts")
+print(response.status_code)  # HTTP 상태 코드 출력
+print(response.json())       # JSON 응답 출력
+
+# POST 요청
+data = {'title': 'foo', 'body': 'bar', 'userId': 1}
+response = requests.post("https://jsonplaceholder.typicode.com/posts", json=data)
+print(response.status_code)  # 응답 상태 코드 출력
+print(response.json())       # 서버로부터의 응답 출력
+2. 웹 스크래핑 (Web Scraping)
+정의
+웹 스크래핑은 자동화된 프로그램으로 웹 페이지의 데이터를 추출하는 기술입니다.
+예를 들어, 뉴스 사이트에서 제목, 날짜, 본문을 가져오는 작업이 포함됩니다.
+
+웹 스크래핑의 주요 단계
+HTTP 요청 보내기
+requests 라이브러리를 사용해 HTML 데이터를 가져옴.
+HTML 파싱 (Parsing)
+HTML 데이터를 분석하여 원하는 요소를 추출.
+데이터 추출
+텍스트, 이미지, 링크 등을 필요한 형태로 가공.
+데이터 저장
+데이터베이스 또는 파일에 저장.
+HTML 구조 이해
+HTML은 태그와 속성으로 구성됩니다. 데이터를 추출하려면 HTML 구조를 이해해야 합니다.
+
+예:
+
+
+<html>
+  <body>
+    <div class="article">
+      <h1>Python 스크래핑 배우기</h1>
+      <p class="date">2024-11-23</p>
+    </div>
+  </body>
+</html>
+여기서 <h1>, <p> 태그 등을 기준으로 데이터를 추출할 수 있습니다.
+
+3. 웹 스크래핑 도구
+1. BeautifulSoup (HTML 파싱)
+BeautifulSoup는 HTML 데이터를 쉽게 파싱하고 탐색할 수 있는 Python 라이브러리입니다.
+
+설치
+
+
+pip install beautifulsoup4
+사용법
+
+
+from bs4 import BeautifulSoup
+
+html = """
+<html>
+  <body>
+    <div class="article">
+      <h1>Python 스크래핑 배우기</h1>
+      <p class="date">2024-11-23</p>
+    </div>
+  </body>
+</html>
+"""
+
+# BeautifulSoup 객체 생성
+soup = BeautifulSoup(html, "html.parser")
+
+# 데이터 추출
+title = soup.find("h1").text
+date = soup.find("p", class_="date").text
+print(f"제목: {title}, 날짜: {date}")
+2. Selenium (동적 웹 스크래핑)
+동적으로 로드되는 웹 페이지 (JavaScript 기반)에서 데이터를 가져오려면 Selenium 같은 브라우저 자동화 도구를 사용합니다.
+
+설치
+
+
+pip install selenium
+사용법
+
+from selenium import webdriver
+
+# 브라우저 드라이버 설정 (Chrome 예시)
+driver = webdriver.Chrome()
+
+# 웹 페이지 열기
+driver.get("https://example.com")
+
+# 데이터 추출
+title = driver.find_element("tag name", "h1").text
+print(f"제목: {title}")
+
+# 브라우저 닫기
+driver.quit()
+4. 웹 스크래핑 예제
+BeautifulSoup로 뉴스 제목 가져오기
+
+import requests
+from bs4 import BeautifulSoup
+
+# HTTP 요청
+response = requests.get("https://news.ycombinator.com/")
+soup = BeautifulSoup(response.text, "html.parser")
+
+# 뉴스 제목 추출
+titles = soup.find_all("a", class_="storylink")
+for idx, title in enumerate(titles):
+    print(f"{idx + 1}. {title.text}")
+Selenium으로 무한 스크롤 데이터 가져오기
+
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+import time
+
+driver = webdriver.Chrome()
+driver.get("https://example.com")
+
+# 페이지 스크롤
+body = driver.find_element("tag name", "body")
+for _ in range(10):  # 10번 스크롤
+    body.send_keys(Keys.PAGE_DOWN)
+    time.sleep(1)
+
+# 데이터 추출
+data = driver.find_elements("class name", "item-class")
+for item in data:
+    print(item.text)
+
+driver.quit()
+5. 주의사항
+서비스 약관 준수
+
+스크래핑 전에 웹사이트의 robots.txt 파일이나 약관을 확인.
+무단 스크래핑은 법적 문제를 일으킬 수 있음.
+요청 간격 조정
+
+서버에 부담을 주지 않도록 요청 사이에 시간 간격을 둠.
+
+import time
+time.sleep(1)
+IP 차단 대비
+
+너무 많은 요청은 IP 차단으로 이어질 수 있음.
+프록시나 사용자 에이전트를 활용:
+
+headers = {"User-Agent": "Mozilla/5.0"}
+response = requests.get("https://example.com", headers=headers)
+6. 웹 스크래핑 도구 비교
+도구	장점	단점
+BeautifulSoup	간단하고 가벼움	동적 웹 페이지 처리 어려움
+Selenium	동적 콘텐츠 처리 가능	느리고 리소스 많이 소모
+Scrapy	크롤링 자동화에 강력함	초기 설정 복잡
+정리
+요청: requests를 사용해 데이터를 가져오고 서버와 상호작용.
+웹 스크래핑: BeautifulSoup로 정적 HTML 파싱, Selenium으로 동적 콘텐츠 처리.
+데이터 추출 시 웹사이트의 약관을 준수하고 효율적인 방법으로 서버에 요청을 보내는 것이 중요.
