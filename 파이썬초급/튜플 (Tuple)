@@ -1,0 +1,77 @@
+튜플은 Python에서 변경할 수 없는(immutable) 자료형으로, 여러 값을 하나의 변수에 저장할 때 사용됩니다. 튜플은 **소괄호 ()**로 정의되며, 리스트와 비슷하지만 한 번 생성되면 내부의 값을 변경하거나 수정할 수 없습니다.
+
+튜플의 특징
+변경 불가능 (Immutable)
+
+한 번 생성된 튜플은 수정, 추가, 삭제가 불가능합니다.
+안전하게 데이터를 보호해야 할 때 유용합니다.
+순서 유지 (Ordered)
+
+요소의 삽입 순서가 유지됩니다.
+인덱스를 사용하여 특정 요소에 접근할 수 있습니다.
+중복 허용 (Allows Duplicates)
+
+동일한 값이 여러 번 나타날 수 있습니다.
+다양한 데이터 타입 저장 가능
+
+튜플은 숫자, 문자열, 리스트 등 여러 데이터 타입을 함께 저장할 수 있습니다.
+튜플 생성
+
+# 튜플 생성
+empty_tuple = ()  # 빈 튜플
+single_element_tuple = (1,)  # 요소가 하나일 때는 꼭 콤마(,)를 붙여야 튜플로 인식
+tuple_example = (1, 2, 3, 'apple', [4, 5])
+
+print(empty_tuple)  # 출력: ()
+print(single_element_tuple)  # 출력: (1,)
+print(tuple_example)  # 출력: (1, 2, 3, 'apple', [4, 5])
+튜플의 주요 기능
+인덱싱 (Indexing)
+특정 위치의 요소를 가져옵니다.
+
+tuple_data = (10, 20, 30, 40)
+print(tuple_data[0])  # 출력: 10
+print(tuple_data[-1])  # 출력: 40 (뒤에서 첫 번째 요소)
+슬라이싱 (Slicing)
+범위를 지정하여 부분 튜플을 가져옵니다.
+
+tuple_data = (10, 20, 30, 40, 50)
+print(tuple_data[1:4])  # 출력: (20, 30, 40)
+튜플 길이 확인
+len() 함수로 튜플의 요소 개수를 확인할 수 있습니다.
+
+tuple_data = (1, 2, 3)
+print(len(tuple_data))  # 출력: 3
+튜플 내 특정 값 확인 (in, not in)
+
+tuple_data = (1, 2, 3, 4)
+print(3 in tuple_data)  # 출력: True
+print(5 not in tuple_data)  # 출력: True
+튜플의 불변성
+튜플 자체는 변경할 수 없지만, **튜플 내부에 있는 변경 가능한 객체(예: 리스트)**는 변경 가능합니다.
+
+
+tuple_data = (1, 2, [3, 4])
+tuple_data[2].append(5)  # 튜플 내부 리스트에 값을 추가
+print(tuple_data)  # 출력: (1, 2, [3, 4, 5])
+튜플과 리스트 비교
+특징	튜플 (Tuple)	리스트 (List)
+가변성	변경 불가능 (Immutable)	변경 가능 (Mutable)
+사용 목적	데이터 보호 및 고정된 값 저장	데이터 수정 및 조작 필요 시
+기호	()	[]
+속도	상대적으로 빠름	상대적으로 느림
+튜플의 활용 예시
+함수의 반환값
+함수에서 여러 값을 반환할 때 사용합니다.
+
+def get_coordinates():
+    return (10, 20)
+
+x, y = get_coordinates()
+print(x, y)  # 출력: 10 20
+딕셔너리 키로 사용
+튜플은 불변이므로 딕셔너리의 키로 사용할 수 있습니다.
+
+locations = {(37.5665, 126.9780): "Seoul", (34.0522, -118.2437): "Los Angeles"}
+print(locations[(37.5665, 126.9780)])  # 출력: Seoul
+튜플은 코드에서 데이터 무결성을 유지하거나 읽기 전용 데이터를 다룰 때 적합합니다.
