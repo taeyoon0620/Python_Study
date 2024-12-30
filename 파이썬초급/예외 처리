@@ -1,0 +1,121 @@
+파이썬에서의 예외 처리
+파이썬에서는 **예외(Exception)**를 처리하여 프로그램이 비정상적으로 종료되지 않도록 도와줍니다. 이는 실행 중 발생할 수 있는 오류를 잡아내고, 적절히 대응하거나 메시지를 출력한 후 프로그램을 계속 진행할 수 있게 합니다.
+
+예외 처리 구조
+기본 구조
+
+try:
+    # 예외가 발생할 가능성이 있는 코드
+except 예외_클래스 as 변수:
+    # 예외가 발생했을 때 실행되는 코드
+else:
+    # 예외가 발생하지 않았을 때 실행되는 코드 (선택 사항)
+finally:
+    # 예외 발생 여부와 관계없이 항상 실행되는 코드 (선택 사항)
+예제 코드
+1. 기본 예외 처리
+
+try:
+    result = 10 / 0  # 0으로 나누는 연산 (예외 발생)
+except ZeroDivisionError as e:
+    print(f"예외 발생: {e}")  # "division by zero"
+2. 여러 예외 처리
+
+try:
+    x = int(input("숫자를 입력하세요: "))
+    result = 10 / x
+except ValueError:
+    print("유효한 숫자가 아닙니다.")
+except ZeroDivisionError:
+    print("0으로 나눌 수 없습니다.")
+3. 모든 예외를 한 번에 처리
+
+try:
+    result = 10 / int(input("숫자를 입력하세요: "))
+except Exception as e:
+    print(f"알 수 없는 예외 발생: {e}")
+4. else와 finally 사용
+
+try:
+    result = 10 / 2
+except ZeroDivisionError:
+    print("0으로 나눌 수 없습니다.")
+else:
+    print(f"결과는 {result}입니다.")  # 예외가 발생하지 않을 경우 실행
+finally:
+    print("프로그램 종료.")  # 항상 실행됨
+사용자 정의 예외
+파이썬에서는 직접 사용자 정의 예외를 만들 수 있습니다.
+
+# 사용자 정의 예외 클래스
+class CustomException(Exception):
+    pass
+
+try:
+    raise CustomException("사용자 정의 예외 발생")
+except CustomException as e:
+    print(f"예외 처리: {e}")
+예외 종류
+파이썬에서 자주 발생하는 내장 예외:
+
+예외 클래스	설명
+ZeroDivisionError	0으로 나눌 때 발생
+ValueError	값이 올바르지 않을 때 발생
+TypeError	잘못된 데이터 타입이 사용될 때 발생
+IndexError	리스트의 잘못된 인덱스에 접근할 때 발생
+KeyError	딕셔너리에 존재하지 않는 키를 참조할 때 발생
+FileNotFoundError	파일이 존재하지 않을 때 발생
+IOError	입출력 작업 실패 시 발생
+AttributeError	존재하지 않는 속성에 접근할 때 발생
+ImportError	모듈 또는 객체를 가져올 수 없을 때 발생
+예외 처리의 장점
+프로그램의 비정상 종료 방지
+예외를 처리하면 프로그램 실행 중 문제가 발생해도 정상 종료할 수 있습니다.
+
+디버깅 용이성
+예외 메시지를 통해 문제를 빠르게 진단할 수 있습니다.
+
+사용자 경험 향상
+오류 상황에서 친절한 메시지를 제공하여 혼란을 줄일 수 있습니다.
+
+실전 사례
+파일 열기
+
+try:
+    with open("data.txt", "r") as file:
+        content = file.read()
+except FileNotFoundError:
+    print("파일이 존재하지 않습니다.")
+except IOError:
+    print("파일을 읽는 중 오류가 발생했습니다.")
+네트워크 요청
+
+import requests
+
+try:
+    response = requests.get("https://example.com")
+    response.raise_for_status()  # HTTP 오류가 있으면 예외 발생
+except requests.exceptions.HTTPError as e:
+    print(f"HTTP 오류: {e}")
+except requests.exceptions.RequestException as e:
+    print(f"네트워크 오류: {e}")
+예외 처리를 잘하는 팁
+구체적인 예외를 처리
+except Exception으로 모든 예외를 처리하기보다는, 특정 예외를 처리하여 명확성을 높입니다.
+
+finally 활용
+파일 닫기나 리소스 정리를 finally 블록에 작성하면 예외 여부와 관계없이 실행됩니다.
+
+로그 작성
+예외가 발생했을 때 로그를 작성하여 문제를 추적하기 쉽도록 합니다.
+
+import logging
+
+try:
+    result = 10 / 0
+except ZeroDivisionError as e:
+    logging.error(f"에러 발생: {e}")
+사용자 정의 예외 활용
+특정 도메인에 적합한 예외를 만들어 코드의 가독성과 유지보수성을 높입니다.
+
+파이썬의 예외 처리 기능을 잘 활용하면 프로그램의 안정성을 크게 향상시킬 수 있습니다.
