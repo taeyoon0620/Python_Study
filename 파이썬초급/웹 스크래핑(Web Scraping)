@@ -1,0 +1,49 @@
+주제: 웹 스크래핑(Web Scraping)
+1. 웹 스크래핑이란?
+웹 스크래핑(Web Scraping)은 웹 페이지에서 데이터를 자동으로 추출하는 기술입니다. HTML 구조를 분석해 필요한 정보를 수집하고, 이를 다양한 형태로 저장하거나 활용할 수 있습니다.
+
+2. 활용 사례
+뉴스 웹사이트에서 최신 기사 제목과 URL 수집.
+전자상거래 사이트에서 제품 가격 비교.
+공공 데이터 포털에서 데이터 자동 다운로드.
+스포츠 경기 결과 및 통계 수집.
+
+3. 사용할 도구
+파이썬에서 웹 스크래핑에 자주 사용하는 라이브러리는 다음과 같습니다:
+
+requests: 웹 페이지 HTML 소스 가져오기.
+BeautifulSoup: HTML 문서에서 원하는 데이터를 파싱.
+Selenium: 동적 웹사이트 데이터 추출 (JavaScript 렌더링이 필요한 경우).
+4. 간단한 예제
+예를 들어, 특정 뉴스 웹사이트에서 기사 제목을 가져오는 프로그램을 작성한다고 가정해봅시다.
+
+import requests
+from bs4 import BeautifulSoup
+
+# 1. 웹 페이지 요청
+url = "https://example-news-website.com"
+response = requests.get(url)
+
+# 2. HTML 파싱
+soup = BeautifulSoup(response.text, 'html.parser')
+
+# 3. 원하는 데이터 추출 (예: 기사 제목)
+titles = soup.find_all('h2', class_='article-title')  # h2 태그와 특정 클래스 선택
+
+# 4. 결과 출력
+for idx, title in enumerate(titles):
+    print(f"{idx + 1}. {title.get_text().strip()}")
+5. 확장 아이디어
+동적 웹사이트 크롤링: JavaScript로 데이터를 로드하는 웹사이트는 Selenium으로 자동화.
+데이터 저장: 수집한 데이터를 CSV, Excel, 또는 데이터베이스에 저장.
+API 활용: 스크래핑 대신 REST API를 사용하면 더 간편하게 데이터 추출 가능.
+6. 주의사항
+법적/윤리적 고려: 웹사이트의 robots.txt 파일을 확인하고, 스크래핑이 허용된 경우에만 사용해야 합니다.
+속도 조절: 서버에 과도한 부하를 주지 않도록 요청 간 딜레이를 추가하세요.
+웹 스크래핑은 데이터 분석, 연구, 자동화 작업에 매우 유용한 기술입니다. 간단한 예제부터 시작해 점차 동적 페이지나 로그인 세션을 처리하는 고급 주제로 발전시켜 보세요!
+
+
+
+
+
+
