@@ -1,0 +1,85 @@
+"인공지능 기초 (Scikit-learn, TensorFlow)"는 머신러닝 및 딥러닝 모델을 구축하는 데 사용되는 두 가지 주요 라이브러리를 포함합니다.
+
+1. Scikit-learn 기초
+Scikit-learn은 머신러닝 알고리즘을 쉽게 적용할 수 있는 파이썬 라이브러리입니다. 주로 지도 학습과 비지도 학습에 사용됩니다.
+
+예제: 간단한 선형 회귀 모델
+아래는 Scikit-learn을 사용해 간단한 선형 회귀 모델을 학습시키는 예제입니다.
+
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+import numpy as np
+
+# 데이터 생성
+X = np.array([[1], [2], [3], [4], [5]])  # 독립 변수
+y = np.array([2, 4, 6, 8, 10])  # 종속 변수 (y = 2x)
+
+# 데이터 분리
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# 모델 초기화 및 학습
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# 예측
+y_pred = model.predict(X_test)
+
+# 결과 출력
+print("실제 값:", y_test)
+print("예측 값:", y_pred)
+print("평균 제곱 오차 (MSE):", mean_squared_error(y_test, y_pred))
+실행 결과
+
+실제 값: [10]
+예측 값: [10.]
+평균 제곱 오차 (MSE): 0.0
+
+2. TensorFlow 기초
+TensorFlow는 딥러닝 모델을 설계하고 학습시키는 데 사용되는 강력한 라이브러리입니다.
+
+예제: 간단한 신경망으로 XOR 문제 해결
+XOR 문제는 논리 게이트 문제로, 비선형적인 데이터를 학습해야 합니다.
+
+import tensorflow as tf
+import numpy as np
+
+# XOR 데이터셋
+X = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])  # 입력
+y = np.array([[0], [1], [1], [0]])  # 출력
+
+# 모델 설계
+model = tf.keras.Sequential([
+    tf.keras.layers.Dense(4, activation='relu', input_shape=(2,)),  # 은닉층
+    tf.keras.layers.Dense(1, activation='sigmoid')  # 출력층
+])
+
+# 모델 컴파일
+model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+
+# 모델 학습
+model.fit(X, y, epochs=1000, verbose=0)  # 1000번 반복 학습
+
+# 예측
+predictions = model.predict(X)
+print("\nXOR 문제 예측 결과:")
+for i in range(len(X)):
+    print(f"입력: {X[i]} -> 출력: {predictions[i][0]:.2f}")
+실행 결과 (예시)
+
+XOR 문제 예측 결과:
+입력: [0 0] -> 출력: 0.01
+입력: [0 1] -> 출력: 0.98
+입력: [1 0] -> 출력: 0.98
+입력: [1 1] -> 출력: 0.02
+두 라이브러리의 차이점
+항목	Scikit-learn	TensorFlow
+주요 용도	머신러닝 모델	딥러닝 모델
+사용 난이도	쉬움	중간~어려움
+기본 구조	간단한 데이터 처리 및 모델 설계	신경망 설계와 복잡한 모델 처리
+주요 기능	데이터 전처리, 모델 학습 및 평가	신경망 구성 및 GPU 가속 학습
+
+어떤 것을 선택해야 할까?
+Scikit-learn: 머신러닝 초보자나 간단한 데이터 분석이 목표인 경우.
+TensorFlow: 딥러닝 모델을 설계하고, 복잡한 데이터 패턴을 학습시키고자 할 때.
+위 예제들은 기초적인 수준이지만, 충분히 실습하며 원리를 이해하면 인공지능 모델 설계에 큰 도움이 될 것입니다! 
