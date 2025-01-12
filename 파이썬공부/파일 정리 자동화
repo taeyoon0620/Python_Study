@@ -1,0 +1,100 @@
+
+다음은 파이썬으로 파일 관리 자동화를 구현한 코드 예제입니다. 이 코드는 지정된 디렉토리에서 파일을 정리하고, 파일 형식에 따라 다른 폴더로 이동시키는 자동화 작업을 수행합니다.
+
+파일 정리 자동화 코드
+
+import os
+import shutil
+
+# 정리 대상 폴더 경로
+source_folder = "C:/Users/YourUsername/Downloads"  # 변경 필요
+destination_folder = "C:/Users/YourUsername/OrganizedFiles"  # 변경 필요
+
+# 파일 형식별 정리 폴더 설정
+file_categories = {
+    "Images": [".jpg", ".jpeg", ".png", ".gif", ".bmp"],
+    "Documents": [".pdf", ".docx", ".xlsx", ".pptx", ".txt"],
+    "Videos": [".mp4", ".avi", ".mov", ".mkv"],
+    "Music": [".mp3", ".wav", ".aac"],
+    "Archives": [".zip", ".rar", ".7z", ".tar.gz"]
+}
+
+# 폴더 생성 함수
+def create_folder(path):
+    if not os.path.exists(path):
+        os.makedirs(path)
+
+# 파일 이동 함수
+def move_file(file_path, target_folder):
+    create_folder(target_folder)
+    shutil.move(file_path, target_folder)
+
+# 파일 정리 함수
+def organize_files(source, destination):
+    # 소스 폴더 내 모든 파일 및 폴더 확인
+    for item in os.listdir(source):
+        item_path = os.path.join(source, item)
+        
+        # 폴더는 건너뜀
+        if os.path.isdir(item_path):
+            continue
+        
+        # 파일 형식 확인
+        file_extension = os.path.splitext(item)[1].lower()
+        moved = False
+        
+        # 파일 형식별 폴더로 이동
+        for category, extensions in file_categories.items():
+            if file_extension in extensions:
+                move_file(item_path, os.path.join(destination, category))
+                print(f"Moved: {item} -> {category}")
+                moved = True
+                break
+        
+        # 정해진 형식이 없는 파일은 "Others" 폴더로 이동
+        if not moved:
+            move_file(item_path, os.path.join(destination, "Others"))
+            print(f"Moved: {item} -> Others")
+
+# 실행
+if __name__ == "__main__":
+    create_folder(destination_folder)  # 정리된 파일 저장 폴더 생성
+    organize_files(source_folder, destination_folder)
+    print("파일 정리가 완료되었습니다!")
+
+코드 설명
+file_categories 사전: 파일 확장자에 따라 카테고리를 정의합니다. 필요에 따라 확장자를 추가/수정할 수 있습니다.
+organize_files 함수:
+지정된 폴더를 탐색하며 파일을 분류합니다.
+파일 형식에 따라 해당 카테고리 폴더로 파일을 이동합니다.
+카테고리에 속하지 않는 파일은 "Others" 폴더로 이동됩니다.
+
+move_file 함수:
+폴더가 없으면 생성 후 파일을 이동합니다.
+출력: 파일이 이동되면 print로 어떤 파일이 어디로 이동되었는지 출력됩니다.
+
+실행 결과 예시
+
+Downloads 폴더에 있는 파일:
+
+example.jpg
+document.pdf
+video.mp4
+random.xyz
+OrganizedFiles 폴더 구조:
+
+OrganizedFiles/
+├── Images/
+│   └── example.jpg
+├── Documents/
+│   └── document.pdf
+├── Videos/
+│   └── video.mp4
+├── Others/
+    └── random.xyz
+
+확장 아이디어
+스케줄링: schedule 라이브러리를 사용하여 특정 시간마다 자동 정리를 수행.
+GUI 추가: tkinter를 활용해 사용자 인터페이스로 폴더 경로를 선택.
+알림 기능: 작업 완료 시 이메일 또는 팝업 알림 추가.
+원하는 대로 커스터마이징 가능하니 재미있게 활용해 보세요! 😊
